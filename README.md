@@ -14,7 +14,7 @@ Para efectos de este curso, estudiaremos la representación de imágenes a trav�
 
 ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/ImagenContinuaVsImageDiscreta.png)
 
-En este curso, también, se estarán estudiando principalmente imágenes a escala de grises e imágenes a color usando el modelo RGB en formato de 8 bits (Nota: Cuidado con OpenCV, ya que suele cargar las imágenes en formato BGR y no RGB). En este formato, cada uno de los pixeles puede ir desde 0 hasta 255.
+En este curso, también, se estarán estudiando principalmente imágenes a escala de grises e imágenes a color usando el modelo RGB en formato de 8 bits (Nota: Cuidado con OpenCV, ya que suele cargar las imágenes en formato BGR y no RGB). En este formato, y para imágenes en escala de grises, cada uno de los pixeles puede ir desde 0 hasta 255.
 
 Para convertir una imagen de BGR a RGB:
 ```Python
@@ -24,11 +24,31 @@ import cv2
 A = cv2.imread('img.jpeg')
 
 # Convertir el formato de imagen
-A = cv2.cvtColoAar()
+A = cv2.cvtColor(A, cv2.COLOR_BGR2RGB)
 ```
 
+Para imágenes a color, cada uno de los pixeles no es un número, sino que cada pixel representa tres números para las tonalidades rojo, verde y azul, respectivamente. La combinación de cada una de estas intensidades da como resultado un color para cada pixel.
+Cada pixel puede, entonces, tomar 256^3 = 16777216 tonalidades de color diferentes. 
+
+Con Octave:
 ```Octave
-x = -2:2
+clc; % Para limpiar ventana de comandos
+clear; % Para limpiar las variables
+
+% Cargar la imagen
+A = imread('img.jpg');
+
+% Información de la imagen
+imfinfo('img.jpg')
+
+% Tipo de formato
+class(A)
+
+% Mostrar la imagen
+imshow(A)
 ```
+
+Con respecto a formatos:
+El formato en cuestión lo que hace es determinar el algoritmo. Por ejemplo, para una imagen 256x256 en JPG, dicha imagen debería de guardar, en principio, 65536 pixeles. No obstante, no lo hace. Lo comprime y solamente guarda unas 10 k (por decir algo) y luego, mediante el algoritmo de JPG, reconstruye para mostrar el resto de los pixeles que no fueron nunca guardados.
 
 ## Clase 4
