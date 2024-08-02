@@ -96,6 +96,8 @@ imshow(B)
 ```
 ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/SumaImagen.png)
 
+<br></br>
+
 Sumar imágenes entre sí:
 ```Octave
 A = imread('img1.jpg')
@@ -112,6 +114,8 @@ imshow(A+B) % Se suman las tonalidades
 % del 255 y no se "sobreaclarará".
 ```
 ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/SumaImagenes.png)
+
+<br></br>
 
 Sumar ruido Gaussiano a una imagen:
 ```Octave
@@ -138,6 +142,7 @@ C = im2uint8(B); % Convertir a 8 bits
 ```
 ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/RuidoGaussianoImagen.png)
 
+<br></br>
 
 Negativo de una imagen (Consiste en, para una imagen I, aplicar In = -I+255):
 ```Octave
@@ -152,6 +157,8 @@ subplot(1,2,2)
 imshow(C)
 ```
 ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/NegativoImagen.png)
+
+<br></br>
 
 Imagen binaria (Se toma un número arbitrario y se compara con todos los pixeles
 de la imagen para determinar si son mayores o menores al número en cuestión)
@@ -179,6 +186,8 @@ imshow(V)
 title('Imagen binaria')
 ```
 ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/BinarioImagen.png)
+
+<br></br>
 
 
 ## Clase 4
