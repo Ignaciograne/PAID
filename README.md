@@ -91,17 +91,18 @@ Con respecto a formatos:
 El formato en cuestión lo que hace es determinar el algoritmo. Por ejemplo, para una imagen 256x256 en JPG, dicha imagen debería de guardar, en principio, 65536 pixeles. No obstante, no lo hace. Lo comprime y solamente guarda unas 10 k (por decir algo) y luego, mediante el algoritmo de JPG, reconstruye para mostrar el resto de los pixeles que no fueron nunca guardados.
 JPG es entonces famoso por guardar imágenes que ocupen poco espacio y tengan una calidad decente. PNG, por su parte, toma un poco más de espacio pero permite una mejor calidad. En general, el formato se va a encargar de determinar cuántos pixeles guardar y cómo reconstruir los faltantes (mediante qué algoritmo).
 
-Para mostrar varias imágenes en un mismo plot:
+### Para mostrar varias imágenes en un mismo plot:
 ```Octave
 subplot(1,2,1) % [X _]
 imShow(A)
-title('Mi imagen')
+title('Mi imagen 1')
 
 subplot(1,2,2) % [_ X]
 imshow(B)
+title('Mi imagen 2')
 ```
 
-Tipo de formato de imágenes en Octave y cómo trabajar con ellos
+### Tipo de formato de imágenes en Octave y cómo trabajar con ellos
 ```Octave
 pkg load image % Necesario para utilizar im2uint8. Es el paquete de procesamiento de imágenes
 
@@ -119,7 +120,7 @@ A3 = im2uint8(A2); % Desnormaliza y convierte a formato de 8 bits
 % Nota: Cuando se hacen operaciones matemáticas, se recomienda convertir la imagen usando el comando im2double
 ```
 
-Operaciones básicas con imágenes:
+### Sumar valores numéricos a una imagen
 ```Octave
 % Suma: Le suma el valor en cuestión (en este caso, 20) a cada pixel de la imagen, por lo que se aclara la misma
 B = A + 20;
@@ -133,7 +134,7 @@ imshow(B)
 
 <br></br>
 
-Sumar imágenes entre sí:
+### Sumar imágenes entre sí
 ```Octave
 A = imread('img1.jpg')
 B = imread('img2.jpg')
@@ -152,7 +153,7 @@ imshow(A+B) % Se suman las tonalidades
 
 <br></br>
 
-Sumar ruido Gaussiano a una imagen:
+### Sumar ruido Gaussiano a una imagen
 ```Octave
 pkg load image 
 
@@ -179,7 +180,8 @@ C = im2uint8(B); % Convertir a 8 bits
 
 <br></br>
 
-Negativo de una imagen (Consiste en, para una imagen I, aplicar In = -I+255):
+### Negativo de una imagen 
+Consiste en, para una imagen I, aplicar In = -I+255:
 ```Octave
 A = imread('img1.jpg');
 
@@ -195,8 +197,9 @@ imshow(C)
 
 <br></br>
 
-Imagen binaria (Se toma un número arbitrario y se compara con todos los pixeles
-de la imagen para determinar si son mayores o menores al número en cuestión)
+### Imagen binaria 
+Se toma un número arbitrario y se compara con todos los pixeles de la imagen para determinar si son 
+mayores o menores al número en cuestión:
 ```Octave
 A = imread('img.jpg')
 subplot(1,2,1)
@@ -227,6 +230,8 @@ title('Imagen binaria')
 
 ## Clase 4
 Vamos a ver algunas funciones extra en Octave...
+
+### Introducir y/o eliminar ruido
 ```Octave
 pkg load image % Para utilizar imnoise
 
@@ -267,7 +272,24 @@ er1 = norm(im2double(A) - im2double(Z), 'frob') % ¡Forma correcta!
 er2 = ssim(A,Z) % Da valores [-1, 1], donde si dos imágenes son muy parecidas, el resultado tiende a 1.
 ```
 
+### Cambiar imagen de color a blanco y negro
+```Octave
+A = imread('img.jpg');
+% Yo puedo ejecutar size(A) lo cual me retorna tres cosas:
+% - Número de pixeles horizontales de la imagen.
+% - Número de pixeles verticales de la imagen.
+% - Número de canales. Si me dice 3 canales, es un RGB. Si me dice 1, está en escala de grises.
 
+subplot(1,2,1)
+imshow(A)
+title('Imagen original')
+
+% Transformación a escala de grises
+B = rgb2gray(A);
+subplot(1,2,2)
+imshow(B)
+title('Imagen en escala de grises')
+```
 
 
 
