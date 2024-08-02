@@ -272,13 +272,15 @@ er1 = norm(im2double(A) - im2double(Z), 'frob') % ¡Forma correcta!
 er2 = ssim(A,Z) % Da valores [-1, 1], donde si dos imágenes son muy parecidas, el resultado tiende a 1.
 ```
 
+<br></br>
+
 ### Cambiar imagen de color a blanco y negro
 ```Octave
 A = imread('img.jpg');
 % Yo puedo ejecutar size(A) lo cual me retorna tres cosas:
 % - Número de pixeles horizontales de la imagen.
 % - Número de pixeles verticales de la imagen.
-% - Número de canales. Si me dice 3 canales, es un RGB. Si me dice 1, está en escala de grises.
+% - Número de canales. Si me dice 3 canales, es un RGB. Si me dice 1 (o si no aparece del todo), está en escala de grises.
 
 subplot(1,2,1)
 imshow(A)
@@ -291,7 +293,134 @@ imshow(B)
 title('Imagen en escala de grises')
 ```
 
+* Poner imagen aquí *
 
+<br></br>
+
+### Ajustar contraste
+```Octave
+pkg load image
+
+A = imread('img.jpg');
+subplot(1,2,1)
+imshow(A)
+title('Imagen original')
+
+% Mejorar el contraste de grises
+B = imadjust(A);
+subplot(1,2,2)
+imshow(B)
+title('Imagen con contraste mejorado')
+```
+
+* Poner imagen aquí *
+
+<br></br>
+
+### Redimensionar
+```Octave
+pkg load image
+
+A = imread('img.jpg');
+subplot(1,2,1)
+imshow(A)
+title('Imagen original')
+
+% Redimensionar la imagen de tamaño
+B = imresize(A, [256, 256]);
+subplot(1,2,2)
+imshow(B)
+title('Imagen redimensionada')
+```
+
+* Poner imagen aquí *
+
+Aunque las dos imágenes se vean idénticas, la realidad es que son distintas. Note que la resolución en la segunda es
+de peor calidad que la resolución para la primera imagen.
+
+<br></br>
+
+Nota: Los tamaños no tienen porqué ser cuadrados:
+```Octave
+pkg load image
+
+A = imread('img.jpg');
+subplot(1,2,1)
+imshow(A)
+title('Imagen original')
+
+% Redimensionar la imagen de tamaño
+B = imresize(A, [128, 256]);
+subplot(1,2,2)
+imshow(B)
+title('Imagen redimensionada')
+```
+
+* Poner imagen aquí *
+
+<br></br>
+
+### Rotar 
+```Octave
+pkg load image
+
+A = imread('img.jpg');
+subplot(1,2,1)
+imshow(A)
+title('Imagen original')
+
+% Rotar la imagen
+B = imrotate(A, 45); % Rotar la imagen A en 45 grados
+subplot(1,2,2)
+imshow(B)
+title('Imagen rotada')
+```
+
+* Poner imagen aquí *
+
+<br></br>
+
+### Detectar bordes
+```Octave
+pkg load image
+
+A = imread('img.jpg');
+subplot(1,2,1)
+imshow(A)
+title('Imagen original')
+
+% Detección de bordes
+B = edge(A, 'Canny');
+subplot(1,2,2)
+imshow(B)
+title('Imagen rotada')
+```
+
+* Poner imagen aquí *
+
+<br></br>
+
+### Segmentación
+Busca separar la imagen en diferentes tonalidades
+```Octave
+pkg load image
+
+A = imread('img.jpg');
+subplot(1,2,1)
+imshow(A)
+title('Imagen original')
+
+% Segmentación
+B = graythresh(A); % Calcula un umbral B de la escala de grises de la imagen A
+C = im2bw(A,B); % Segmenta la imagen A usando el umbral B
+subplot(1,2,2)
+imshow(C)
+title('Imagen segmentada')
+```
+
+* Poner imagen aquí *
+
+<br></br>
 
 
 
