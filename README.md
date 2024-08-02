@@ -54,8 +54,35 @@ imwrite('A', 'imgBMP.bmp')
 
 Con respecto a formatos:
 El formato en cuestión lo que hace es determinar el algoritmo. Por ejemplo, para una imagen 256x256 en JPG, dicha imagen debería de guardar, en principio, 65536 pixeles. No obstante, no lo hace. Lo comprime y solamente guarda unas 10 k (por decir algo) y luego, mediante el algoritmo de JPG, reconstruye para mostrar el resto de los pixeles que no fueron nunca guardados.
-JPG es entonces famoso por guardar imágenes que ocupen poco espacio y tengan una calidad decente. PNG, por su parte, toma un poco más de espacio pero permite una mejor calidad. En general, el formato se va a encargar de determinar cuántos pixeles guardar y cómo reconstruir los faltantes (mediante qué algoritmo). 
+JPG es entonces famoso por guardar imágenes que ocupen poco espacio y tengan una calidad decente. PNG, por su parte, toma un poco más de espacio pero permite una mejor calidad. En general, el formato se va a encargar de determinar cuántos pixeles guardar y cómo reconstruir los faltantes (mediante qué algoritmo).
 
+Para mostrar varias imágenes en un mismo plot:
+```Octave
+subplot(1,2,1) % [X _]
+imShow(A)
+title('Mi imagen')
+
+subplot(1,2,2) % [_ X]
+imshow(B)
+```
+
+Tipo de formato de imágenes en Octave y cómo trabajar con ellos
+```Octave
+pkg load image % Necesario para utilizar im2uint8. Es el paquete de procesamiento de imágenes
+
+A = imread('img.pg')
+
+A1 = double(A); % Cambiar a formato double --> Hay que tener cuidado con este porque al
+                %                              tener en formato decimal, lo entiende como
+                %                              números de 0 a 1, y como los pixeles tienen
+                %                              valores del tipo 125.25 entonces al ser
+                %                              mayores que 1 los tira todos en blanco y
+                %                              parece que no se muestra más que un fondo blanco
+A2 = im2double(A); % Cambiar a formato double y normalizar
+A3 = im2uint8(A2); % Desnormaliza y convierte a formato de 8 bits
+
+% Nota: Cuando se hacen operaciones matemáticas, se recomienda convertir la imagen usando el comando im2double
+```
 
 Operaciones básicas con imágenes:
 ```Octave
@@ -69,6 +96,8 @@ imshow(B)
 ```
 
 ```Octave
+pkg load image 
+
 A = imread('img1.jpg')
 B = imread('img2.jpg')
 
@@ -78,7 +107,9 @@ subplot(1,3,2)
 imshow(B)
 subplot(1,3,3)
 imshow(A+B) % Se suman las tonalidades
-% También es posible hacer algo como A+B-50 (donde el 50 puede ser cualquier otro número) para combinar las imágenes sin que "se pierda información", ya que no llegará a la barrera del 255 y no se "sobreaclarará".
+% También es posible hacer algo como A+B-50 (donde el 50 puede ser cualquier otro número)
+% para combinar las imágenes sin que "se pierda información", ya que no llegará a la barrera
+% del 255 y no se "sobreaclarará".
 
 % Sumar ruido Gaussiano a una imagen
 % Se recomienda normalizar y cambiar de formato la imagen
@@ -91,16 +122,52 @@ An = im2double(A); % Se normaliza y se cambia el tipoo de variable
 B = An+N;
 
 imshow(B)
+
+% Después de alguna operación matemática, se recomienda volver a convertir la 
+% imagen resultante en el formato de 8 bits
+
+C = im2uint8(B); % Convertir a 8 bits
 ```
 
-Y para mostrar varias imágenes en un mismo plot:
+Negativo de una imagen (Consiste en, para una imagen I, aplicar In = -I+255):
 ```Octave
-subplot(1,2,1) % [X _]
-imShow(A)
-title('Mi imagen')
+A = imread('img1.jpg');
 
-subplot(1,2,2) % [_ X]
-imshow(B)
+An = double(A);
+C = uint8(-An+255);
+subplot(1,2,1)
+imshow(A)
+
+subplot(1,2,2)
+imshow(C)
 ```
+
+Cómo obtener una imagen binaria (Se toma un número arbitrario y se compara con todos los pixeles
+de la imagen para determinar si son mayores o menores al número en cuestión)
+```Octave
+A = imread('img.jpg')
+subplot(1,2,1)
+imshow(A)
+title('Imagen original')
+
+[m,n] = size(A);
+alpha = 127;
+C = zeros(m,n);
+for i = 1:m
+  for j=1:n
+    if A(i,j) <= alpha
+      C(i,j) = 0;
+    else
+      C(i,j) = 255;
+    end
+  end
+end
+
+subplot(1,2,2)
+imshow(V)
+title('Imagen binaria')
+```
+
+
 
 ## Clase 4
