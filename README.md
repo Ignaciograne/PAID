@@ -1,6 +1,41 @@
 # PAID
 Apuntes del curso Procesamiento y Análisis de Imágenes Digitales
 
+## Tabla de contenidos
+- [Clase 1](#clase-1)
+- [Clase 2](#clase-2)
+- [Clase 3](#clase-3)
+- [Clase 4](#clase-4)
+- [Clase 5](#clase-5)
+- [Clase 6](#clase-6)
+- [Clase 7](#clase-7)
+- [Clase 8](#clase-8)
+- [Clase 9](#clase-9)
+- [Clase 10](#clase-10)
+- [Clase 11](#clase-11)
+- [Clase 12](#clase-12)
+- [Clase 13](#clase-13)
+- [Clase 14](#clase-14)
+- [Clase 15](#clase-15)
+- [Clase 16](#clase-16)
+- [Clase 17](#clase-17)
+- [Clase 18](#clase-18)
+- [Clase 19](#clase-19)
+- [Clase 20](#clase-20)
+- [Clase 21](#clase-21)
+- [Clase 22](#clase-22)
+- [Clase 23](#clase-23)
+- [Clase 24](#clase-24)
+- [Clase 25](#clase-25)
+- [Clase 26](#clase-26)
+- [Clase 27](#clase-27)
+- [Clase 28](#clase-28)
+- [Clase 29](#clase-29)
+- [Clase 30](#clase-30)
+- [Clase 31](#clase-31)
+- [Clase 32](#clase-32)
+
+
 ## Clase 1
 Introducción
 
@@ -191,3 +226,89 @@ title('Imagen binaria')
 
 
 ## Clase 4
+Vamos a ver algunas funciones extra en Octave...
+```Octave
+pkg load image % Para utilizar imnoise
+
+A = imread('img1.jpg')
+subplot(1,3,1)
+imshow(A)
+
+% Incorporar ruido (sal y pimienta) a una imagen
+% El ruido sal y pimienta consiste en quitar algunos pixeles de la imagen original
+% y reemplazarlos con pixeles completamente negros o complemente blancos.
+Y = imnoise(A, 'salt & pepper', 0.05)
+subplot(1,3,2)
+imshow(Y)
+
+% Eliminar ruido (sal y pimienta) de una imagen
+Z = medfil2(Y); % Limpiar imagen con filtro de la mediana
+subplot(1,3,3)
+imshow(Z)
+```
+
+* Poner imagen aquí *
+
+Aunque la primera y la última imagen sean idénticas, visualmente hablando, en realidad no lo son.
+
+Por ello, se mide el error como:
+```Octave
+% Error: |A - Z| (La diferencia entre la teórica y la experimental)
+
+% MSE (Mean Squared Error): Compara pixel por pixel
+er1 = norm(A-Z, 'fro') % Aplicando la norma de Frobenius. No obstante, esto da error,
+                       % debido al formato de 8 bits de la imagen. Por ello, se debe
+                       % de convertir a una imagen normalizada.
+er1 = norm(im2double(A) - im2double(Z), 'frob') % ¡Forma correcta!
+                                                % La idea es buscar que el error sea lo más pequeño posible.
+
+% SSIM (Structural Similarity Index Measure): Compara la estructura general de la imagen
+% (Para usar esta se debe de colocar la función que nos pasó el profesor en el mismo directorio que nuestro código).
+er2 = ssim(A,Z) % Da valores [-1, 1], donde si dos imágenes son muy parecidas, el resultado tiende a 1.
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Clase 5
+## Clase 6
+## Clase 7
+## Clase 8
+## Clase 9
+## Clase 10
+## Clase 11
+## Clase 12
+## Clase 13
+## Clase 14
+## Clase 15
+## Clase 16
+## Clase 17
+## Clase 18
+## Clase 19
+## Clase 20
+## Clase 21
+## Clase 22
+## Clase 23
+## Clase 24
+## Clase 25
+## Clase 26
+## Clase 27
+## Clase 28
+## Clase 29
+## Clase 30
+## Clase 31
+## Clase 32
