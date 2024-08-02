@@ -238,6 +238,7 @@ pkg load image % Para utilizar imnoise
 A = imread('img1.jpg')
 subplot(1,3,1)
 imshow(A)
+title('Imagen original')
 
 % Incorporar ruido (sal y pimienta) a una imagen
 % El ruido sal y pimienta consiste en quitar algunos pixeles de la imagen original
@@ -245,14 +246,16 @@ imshow(A)
 Y = imnoise(A, 'salt & pepper', 0.05)
 subplot(1,3,2)
 imshow(Y)
+title('Imagen con ruido sal y pimienta')
 
 % Eliminar ruido (sal y pimienta) de una imagen
 Z = medfil2(Y); % Limpiar imagen con filtro de la mediana
 subplot(1,3,3)
 imshow(Z)
+title('Imagen limpiada')
 ```
 
-* Poner imagen aquí *
+![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/SalYPimientaImagen.png)
 
 Aunque la primera y la última imagen sean idénticas, visualmente hablando, en realidad no lo son.
 
@@ -293,7 +296,7 @@ imshow(B)
 title('Imagen en escala de grises')
 ```
 
-* Poner imagen aquí *
+![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/EscalaDeGrisesImagen.png)
 
 <br></br>
 
@@ -313,7 +316,7 @@ imshow(B)
 title('Imagen con contraste mejorado')
 ```
 
-* Poner imagen aquí *
+![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/ContrasteMejoradoImagen.png)
 
 <br></br>
 
@@ -333,7 +336,7 @@ imshow(B)
 title('Imagen redimensionada')
 ```
 
-* Poner imagen aquí *
+![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/RedimensionCuadradaImagen.png)
 
 Aunque las dos imágenes se vean idénticas, la realidad es que son distintas. Note que la resolución en la segunda es
 de peor calidad que la resolución para la primera imagen.
@@ -356,7 +359,7 @@ imshow(B)
 title('Imagen redimensionada')
 ```
 
-* Poner imagen aquí *
+![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/RedimensionNoCuadradaImagen.png)
 
 <br></br>
 
@@ -376,7 +379,7 @@ imshow(B)
 title('Imagen rotada')
 ```
 
-* Poner imagen aquí *
+![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/RotacionImagen.png)
 
 <br></br>
 
@@ -393,10 +396,10 @@ title('Imagen original')
 B = edge(A, 'Canny');
 subplot(1,2,2)
 imshow(B)
-title('Imagen rotada')
+title('Imagen con bordes resaltados')
 ```
 
-* Poner imagen aquí *
+![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/BordesResaltadosImagen.png)
 
 <br></br>
 
@@ -418,7 +421,7 @@ imshow(C)
 title('Imagen segmentada')
 ```
 
-* Poner imagen aquí *
+![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/SegmentacionImagen.png)
 
 <br></br>
 
