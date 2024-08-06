@@ -476,7 +476,59 @@ Nota: Se debe tener cuidado con las dimensiones de la imagen en los pixeles que 
 
 esto implica que x' > m y y' > n.
 
-2. 
+```Octave
+% insertar código de traslación
+```
+* repasar video del minuto 35 a 40 *
+
+2. Rotación: Consiste en rotar la imagen una cantidad de grados \theta. Dicha rotación se hace en contra de las manesillas del reloj.
+
+* insertar imagen de rotación *
+
+la formulación matemática de la rotación es la siguiente:
+
+* insertar imagen de rotación 2 *
+
+donde x' = a_0(x-x_c) + a_1(y-y_c) + x_c
+      y' = b_0(x-x_c) + b_1(y-y_c) + y_c
+
+      donde:
+      - a_0 = cos(\theta)
+      - a_1 = sen(\theta)
+      - b_0 = -sen(\theta)
+      - b_1 = cos(\theta)
+      - (x_c, y_c) es el punto donde queremos que rote la imagen
+
+      Nota: Normalmente, deseamos rotar la imagen desde el centro de dicha imagen. Por ello:
+      - x_c = m/2, parte entera
+      - y_c = n/2, parte entera
+      
+```Octave
+% insertar código de rotación
+```
+
+Nota: Al notar la imagen, estamos perdiendo las esquinas de la imagen.
+
+* insertar imagen de rotación *
+
+para evitar esta pérdida de pixeles, se debe de agrandar la imagen:
+
+* insertar imagen de rotación *
+
+donde m' > m.
+
+¿Cómo hacer esto? 
+Pues, inicialmente se tiene una imagen de alto n con ancho m. La diagonal es sqrt(m^2 + n^2).
+La idea es entonces colocar la imagen original entro de una imagen que tenga dimensiones: floor(sqrt(m^2+n^2))+1 × floor(sqrt(m^2+n^2+1))+1.
+Una vez hecho esto, se rota la imagen original.
+
+* insertar imagen de este paso a paso *
+
+
+
+3. 
+
+
 
 
 
