@@ -439,6 +439,54 @@ title('Imagen segmentada')
 
 
 ## Clase 5
+
+Una operación geométrica se describe como una transformación de pixeles de la imagen A.
+
+Por ejemplo, rotar 180º una imagen. Lo que se hace al fin y al cabo es modificar los pixeles y obtener una nueva imagen. Matemáticamente, esto se reperesenta de la siguiente manera:
+
+A(x,y) --> B(x', y') = B(t_x(x,y), t_y(x, y))
+
+donde t_x y t_y representa la transformación aplicada a los pixeles. A esto se le conoce como transformación de posición de pixeles.
+
+Nota: Las transformadas de t_x y t_y se conocen como transformadas afines.
+
+En general, estas transformadas se representan como combinaciones lineales de (x,y):
+
+x' = t_x(x,y) = a_o x + a_1 y + a_2, donde a0, a1, a2 pertenecen al conjunto de números reales.
+y' = t_y(x,y) = b_o x + b_1 y + b_2, donde b0, b1, b2 pertenecen al conjunto de números reales.
+
+Tipos de transformaciones afines lineales:
+1. Traslación: Mover la imagen
+- \delta_x > 0
+- \delta_y > 0
+
+* insertar imagen de traslación *
+
+donde \delta_x y \delta_y son la cantidad de pixeles que se traslada una imagen en el eje x y y, respectivamente.
+
+Debido a ser una transformación afín:
+
+A(x,y) --> B(x', y'), donde:
+- x' = 1 × x + 0 × y + \delta_x = x + \delta_x
+- y' = 0 × x + 1 × y + \delta_y = y + \delta_y
+
+Nota: Se debe tener cuidado con las dimensiones de la imagen en los pixeles que salen de los márgenes. Si un pixel sale del margen, nosotros eliminaremos dichos pixeles.
+
+* insertar imagen de pixel desapareciendo *
+
+esto implica que x' > m y y' > n.
+
+2. 
+
+
+
+
+
+
+
+
+
+
 ## Clase 6
 ## Clase 7
 ## Clase 8
