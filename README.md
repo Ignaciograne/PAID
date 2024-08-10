@@ -606,8 +606,16 @@ Entonces, la clase pasada vimos dos transformaciones afines (traslación y rotac
 
 Por otro lado, existen otro tipo de transformadas que no son lineales..
 ### Transformaciones afines no lineales:
-La estructura sigue el mismo patrón que en las transformaciones lineales. Es decir, es simplemente mover pixeles, sólo que la regla de cómo se mueven es lo que cambia.
-
+La estructura sigue el mismo patrón que en las transformaciones lineales. Es decir, es simplemente mover pixeles, sólo que la regla de cómo se mueven es lo que cambia (comportamiento no lineal).
+1. Efecto rippling
+    Sea A una imagen de tamaño mxn. La transformación "rippling" se define como:
+    $A(x,y) \rightarrow B(x', y')$
+    donde:
+    - $x' = x + A_x \cdot \sin \left( \frac{2\pi \cdot y}{L_x} \right)$
+    - $y' = y + A_y \cdot \sin \left( \frac{2\pi \cdot x}{L_y} \right)$
+      donde:
+      - $L_x, L_y$ son los periodos de ondulación. Entre más grandes sean estos, menor será la cantidad de ondulaciones.
+      - $A_x, A_y$ son los valores de amplitud de onda.
 
 
 
