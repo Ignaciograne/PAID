@@ -483,9 +483,6 @@ En general, estas transformadas se representan como combinaciones lineales de $(
     title('Imagen original')
 
     [m,n,r] = size(A);
-
-   
-
     % Traslación delta_x y delta_y de la imagen
     for i=1:min([m n])
       B = uint8(zeros(m,n,r)); % Se inicializa una matriz del mismo tamaño
@@ -503,58 +500,87 @@ En general, estas transformadas se representan como combinaciones lineales de $(
     
       subplot(1,2,2)
       imshow(B)
-      title('Imagen Trasladada')
+      title('Imagen trasladada')
       pause(0.1)
     end
     ```
-* repasar video del minuto 35 a 40 *
 
-2. Rotación: Consiste en rotar la imagen una cantidad de grados \theta. Dicha rotación se hace en contra de las manesillas del reloj.
+2. Rotación: Consiste en rotar la imagen una cantidad de grados $\theta$. Dicha rotación se hace en el sentido de las manecillas del reloj.
 
-* insertar imagen de rotación *
+    ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/EsbozoRotacionImagen.png)
+    
+    la formulación matemática de la rotación es la siguiente:
+    
+    ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/RotacionFormulacionMatematica.png)
+    
+    donde:
+    - $x' = a_0(x-x_c) + a_1(y-y_c) + x_c$
+    - $y' = b_0(x-x_c) + b_1(y-y_c) + y_c$
+  
+        donde:
+        - $a_0 = \cos(\theta)$ y $a_1 = \sin(\theta)$
+        - $b_0 = -\sin(\theta)$ y $b_1 = \cos(\theta)$
+        - $(x_c, y_c)$ es el punto desde donde queremos que rote la imagen
+  
+          Nota: Normalmente, deseamos rotar la imagen desde el centro de dicha imagen. Por ello:
+          - $x_c = m/2$ (parte entera)
+          - $y_c = n/2$ (parte entera)
+        
+    El código para rotar una imagen es:
+    ```Octave
+    pkg load image
 
-la formulación matemática de la rotación es la siguiente:
+    A = imread('img.jpg') % Recuerde que esta imagen se encuentra en formato de 8 bits
+    A = imresize(A, [128, 128]); % Se redimensiona la imagen original para que la 
+                                 % "animación" no ocurra tan lento
+    subplot(1,2,1)
+    imshow(A)
+    title('Imagen original')
 
-* insertar imagen de rotación 2 *
+    [m,n,r] = size(A);
+    % Traslación delta_x y delta_y de la imagen
+    B = uint8(zeros(m,n,r));
+    angulo = 45;
+    a0 = cosd(angulo); a1 = sind(angulo); % cosd y sind utilizan grados
+    b0 = -sind(angulo); b1 = cosd(angulo);
+    xc = floor(m/2); yc = floor(n/2);
+    for x=1:m
+      for y=1:n
+        x_aux = round(a0*(x-xc) + a1*(y-yc) + xc);
+        y_aux = round(b0*(x-xc) + b1*(y-yc) + yc);
+        x_t = mod(x_aux,m); % Valor entre 0 y m-1 MODULO M REDONDEADO
+        y_t = mod(y_aux,n); % Valor entre 0 y n-1 MODULO N REDONDEADO
+        if and(x_t==x_aux,y_t==y_aux)
+          B(x_t+1,y_t+1,:)=A(x,y,:); % Se suma 1, porque la indexación inicia en 1
+        end
+      end
+    end 
+    ```
+  
+    Nota: Al rotar la imagen, estamos perdiendo sus esquinas (además de información en la propia imagen):
+    
+    ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/RotadaSinEsquinasImagen.png)
 
-donde x' = a_0(x-x_c) + a_1(y-y_c) + x_c
-      y' = b_0(x-x_c) + b_1(y-y_c) + y_c
+    esto ocurre debido al redondeo utilizado en el código con ángulos de por ejemplo 45°, ya que los pixeles se ubican en otras coordenadas que no son, en principio, las coordenadas correctas. Con 90°, por ejemplo, estos errores desaparecen y la imagen se ajusta perfecto:
 
-      donde:
-      - a_0 = cos(\theta)
-      - a_1 = sen(\theta)
-      - b_0 = -sen(\theta)
-      - b_1 = cos(\theta)
-      - (x_c, y_c) es el punto donde queremos que rote la imagen
-
-      Nota: Normalmente, deseamos rotar la imagen desde el centro de dicha imagen. Por ello:
-      - x_c = m/2, parte entera
-      - y_c = n/2, parte entera
-      
-```Octave
-% insertar código de rotación
-```
-
-Nota: Al notar la imagen, estamos perdiendo las esquinas de la imagen.
-
-* insertar imagen de rotación *
-
-para evitar esta pérdida de pixeles, se debe de agrandar la imagen:
-
-* insertar imagen de rotación *
-
-donde m' > m.
-
-¿Cómo hacer esto? 
-Pues, inicialmente se tiene una imagen de alto n con ancho m. La diagonal es sqrt(m^2 + n^2).
-La idea es entonces colocar la imagen original entro de una imagen que tenga dimensiones: floor(sqrt(m^2+n^2))+1 × floor(sqrt(m^2+n^2+1))+1.
-Una vez hecho esto, se rota la imagen original.
-
-* insertar imagen de este paso a paso *
+    ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/RotadaSinPerdidasImagen.png)
+   
+    En todo caso, para evitar la pérdida de pixeles, se debe de agrandar el fondo donde se despliega la misma:
+    
+    ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/RotadaConEsquinasImagen.png)
+    
+    donde m' > m y n' > n.
+    
+    ¿Cómo hacer esto? 
+    Pues, inicialmente se tiene una imagen de alto n con ancho m. La diagonal es sqrt(m^2 + n^2).
+    La idea es entonces colocar la imagen original entro de una imagen que tenga dimensiones: floor(sqrt(m^2+n^2))+1 × floor(sqrt(m^2+n^2+1))+1.
+    Una vez hecho esto, se rota la imagen original.
+    
+    ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/RotacionPasoPaso.png)
 
 
 
-3. 
+4. 
 
 
 
