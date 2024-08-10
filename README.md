@@ -583,6 +583,40 @@ En general, estas transformadas se representan como combinaciones lineales de $(
 
 
 ## Clase 6
+En la clase pasada estuvimos viendo algunas transformaciones geométricas, donde:
+$A(x,y) \rightarrow B(x', y')$
+
+Y si la transformación es lineal:
+- $x' = T_x(x,y) = a_0x + a_1y + a_2$
+- $y' = T_y(x,y) = b_0x + b_1y + b_2$
+
+Entonces, la clase pasada vimos dos transformaciones afines (traslación y rotación).
+
+### Más transformaciones afines lineales:
+3. Escalamiento
+    Existen tres posibles enfoques a la hora de escalar:
+    - Incrementar el tamaño de la imagen y mantener el marco del mismo tamaño. 
+    - Incrementar el tamaño de la imagen y del marco.
+      El problema que ocurre a la hora de incrementar es que esto conlleva un problema de pixeles en negro.
+    - Disminuir el tamaño de la imagen.
+
+    Entonces, si yo tengo una imagen $A(x,y)$, y la busco escalar con factores $S_x$ (escalar filas) y $S_y$ (escalar columnas), lo que estaría buscando es entonces una imagen $B(x', y')$, donde $x' = s_x \dot x$ y $y = s_y \cdot y$.
+    
+<br></br>
+
+Por otro lado, existen otro tipo de transformadas que no son lineales..
+### Transformaciones afines no lineales:
+La estructura sigue el mismo patrón que en las transformaciones lineales. Es decir, es simplemente mover pixeles, sólo que la regla de cómo se mueven es lo que cambia.
+
+
+
+
+
+
+
+
+<br></br>
+
 
 
 ## Clase 7
