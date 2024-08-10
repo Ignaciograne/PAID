@@ -427,58 +427,86 @@ title('Imagen segmentada')
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 ## Clase 5
+
+Sea A una imagen de tamaño mxn (a color o escala de grises).
+Se sabe que A(x,y), donde x ∈ {1,2,...} y y ∈ {1,2,...,n}, es un pixel de la imagen A.
 
 Una operación geométrica se describe como una transformación de pixeles de la imagen A.
 
 Por ejemplo, rotar 180º una imagen. Lo que se hace al fin y al cabo es modificar los pixeles y obtener una nueva imagen. Matemáticamente, esto se reperesenta de la siguiente manera:
 
-A(x,y) --> B(x', y') = B(t_x(x,y), t_y(x, y))
+$A(x,y) \rightarrow B(x', y') = B(T_x(x,y), T_y(x, y))$
 
-donde t_x y t_y representa la transformación aplicada a los pixeles. A esto se le conoce como transformación de posición de pixeles.
+donde $T_x$ y $T_y$ representan la transformación aplicada a los pixeles. A esto se le conoce como transformación de posición de pixeles.
 
-Nota: Las transformadas de t_x y t_y se conocen como transformadas afines.
+Nota: Las transformadas $T_x$ y $T_y$ se conocen como transformadas afines.
 
-En general, estas transformadas se representan como combinaciones lineales de (x,y):
+En general, estas transformadas se representan como combinaciones lineales de $(x,y)$:
 
-x' = t_x(x,y) = a_o x + a_1 y + a_2, donde a0, a1, a2 pertenecen al conjunto de números reales.
-y' = t_y(x,y) = b_o x + b_1 y + b_2, donde b0, b1, b2 pertenecen al conjunto de números reales.
+- $x' = T_x(x,y) = a_0x + a_1y + a_2$, donde $a_0$, $a_1$, $a_2$ ∈ $\mathbb{R}$.
+- $y' = T_y(x,y) = b_ox + b_1y + b_2$, donde $b_0$, $b_1$, $b_2$ ∈ $\mathbb{R}$.
 
-Tipos de transformaciones afines lineales:
-1. Traslación: Mover la imagen
-- \delta_x > 0
-- \delta_y > 0
+### Tipos de transformaciones afines lineales:
+1. Traslación: Mover la imagen.
 
-* insertar imagen de traslación *
+    Si:
+    - $\Delta_x > 0$
+    - $\Delta_y > 0$
+    se dice que se tiene una traslación positiva. La cual luce tal que:
 
-donde \delta_x y \delta_y son la cantidad de pixeles que se traslada una imagen en el eje x y y, respectivamente.
+    ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/TraslacionImagen.png)
 
-Debido a ser una transformación afín:
+    donde $\Delta_x$ y $\Delta_y$ son la cantidad de pixeles que se traslada una imagen en el eje $x$ y $y$, respectivamente.
 
-A(x,y) --> B(x', y'), donde:
-- x' = 1 × x + 0 × y + \delta_x = x + \delta_x
-- y' = 0 × x + 1 × y + \delta_y = y + \delta_y
+    Debido a ser una transformación afín:
+    
+    $A(x,y) \rightarrow B(x', y')$, donde:
+    - $x' = 1 \cdot x + 0 \cdot y + \Delta_x = x + \Delta_x$
+    - $y' = 0 \cdot x + 1 \cdot y + \Delta_y = y + \Delta_y$
 
-Nota: Se debe tener cuidado con las dimensiones de la imagen en los pixeles que salen de los márgenes. Si un pixel sale del margen, nosotros eliminaremos dichos pixeles.
+    Nota: Se debe tener cuidado con las dimensiones de la imagen en los pixeles que salen de los márgenes. Si un pixel sale del margen, nosotros eliminaremos dichos pixeles.
 
-* insertar imagen de pixel desapareciendo *
+    ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/DesaparecePixelDeImagen.png)
 
-esto implica que x' > m y y' > n.
+    esto implica que $x' > m$ y $y' > n$, como bien indica la figura anterior (PD: El profe menciona que en caso de descartarlo, en la programación debe de haber un `if` que verifique esta condición).
 
-```Octave
-% insertar código de traslación
-```
+    El código para trasladar una imagen es:
+    ```Octave
+    pkg load image
+
+    A = imread('img.jpg') % Recuerde que esta imagen se encuentra en formato de 8 bits
+    A = imresize(A, [128, 128]); % Se redimensiona la imagen original para que la 
+                                 % "animación" no ocurra tan lento
+    subplot(1,2,1)
+    imshow(A)
+    title('Imagen original')
+
+    [m,n,r] = size(A);
+
+   
+
+    % Traslación delta_x y delta_y de la imagen
+    for i=1:min([m n])
+      B = uint8(zeros(m,n,r)); % Se inicializa una matriz del mismo tamaño
+                               % que la imagen original, en formato de 8 bits
+      deltax = i; deltay = i;
+      for x=1:m
+        for y=1:n
+          x_t = x+deltax; % Transformaciones
+          y_t = y+deltay; % afines
+          if and(x_t<=m, y_t<=n)
+            B(x_t,y_t,:) = A(x,y,:) % Reubicación del pixel A(x,y) en la nueva imagen B
+          end
+        end
+      end
+    
+      subplot(1,2,2)
+      imshow(B)
+      title('Imagen Trasladada')
+      pause(0.1)
+    end
+    ```
 * repasar video del minuto 35 a 40 *
 
 2. Rotación: Consiste en rotar la imagen una cantidad de grados \theta. Dicha rotación se hace en contra de las manesillas del reloj.
