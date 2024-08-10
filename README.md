@@ -567,7 +567,7 @@ En general, estas transformadas se representan como combinaciones lineales de $(
    
     En todo caso, para evitar la pérdida de pixeles, se debe de agrandar el fondo donde se despliega la misma:
     
-    ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/RotadaConEsquinasImagen.png)
+    ![ToDo: En el catálogo](https://github.com/Ignaciograne/PAID/blob/main/Imgs/RotadaConEsquinasImagen.png)
     
     donde m' > m y n' > n.
     
@@ -578,22 +578,13 @@ En general, estas transformadas se representan como combinaciones lineales de $(
     
     ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/RotacionPasoPaso.png)
 
-
-
-4. 
-
-
-
-
-
-
-
-
-
+<br></br>
 
 
 
 ## Clase 6
+
+
 ## Clase 7
 ## Clase 8
 ## Clase 9
