@@ -629,7 +629,19 @@ La estructura sigue el mismo patrón que en las transformaciones lineales. Es de
 
 
 ## Clase 7
+
+
+<br></br>
+
+
+
 ## Clase 8
+Feriado
+
+<br></br>
+
+
+
 ## Clase 9
 ## Clase 10
 ## Clase 11
