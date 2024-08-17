@@ -554,7 +554,7 @@ En general, estas transformadas se representan como combinaciones lineales de $(
           B(x_t+1,y_t+1,:)=A(x,y,:); % Se suma 1, porque la indexación inicia en 1
         end
       end
-    end 
+    end
     ```
   
     Nota: Al rotar la imagen, estamos perdiendo sus esquinas (además de información en la propia imagen):
@@ -608,6 +608,7 @@ Por otro lado, existen otro tipo de transformadas que no son lineales..
 ### Transformaciones afines no lineales:
 La estructura sigue el mismo patrón que en las transformaciones lineales. Es decir, es simplemente mover pixeles, sólo que la regla de cómo se mueven es lo que cambia (comportamiento no lineal).
 1. Efecto rippling
+   
     Sea A una imagen de tamaño mxn. La transformación "rippling" se define como:
     $A(x,y) \rightarrow B(x', y')$
     donde:
@@ -618,10 +619,135 @@ La estructura sigue el mismo patrón que en las transformaciones lineales. Es de
       - $L_x, L_y$ son los periodos de ondulación. Entre más grandes sean estos, menor será la cantidad de ondulaciones.
       - $A_x, A_y$ son los valores de amplitud de onda.
 
+    ```Octave
+    pkg load image
+
+    % Ejemplo de rippling de una imagen
+    A=imread('img.jpg');
+    A=imresize(A, [128,128]); % Se reduce el tamaño de la imagen
+                              % original para que no tarde tanto
+    subplot(1,2,1)
+    imshow(A)
+    title('Imagen original')
+    [m,n,r]=size(A);
+    
+    %Periodos
+    Lx=75; Ly=75;
+    
+    % Variando Ampliación
+    % Amplitudes
+    for k=5:5:200
+      Ax=k;
+      Ay=k;
+      B=uint8(zeros(m,n,r));
+    
+      for x=1:m
+        for y=1:n
+           xaux=round(x+Ax*sin(2*pi*y/Lx));
+           xnew=mod(xaux,m);
+           yaux=round(y+Ay*sin(2*pi*x/Ly));
+           ynew=mod(yaux,m);
+           if and(xnew==xaux,ynew==yaux)
+              B(xnew+1,ynew+1,:)=A(x,y,:);
+           end
+        endfor
+      endfor
+    
+      subplot(1,2,2)
+      imshow(B)
+      title('Imagen con efecto rippling')
+      pause(0.05)
+    end
+    ```
+    
+    esto genera una especie de animación en la cual el fondo se va mezclando entre sí hasta desaparecer la imagen.
 
 
+Nota: Octave tiene un comando para realizar transformaciones geométricas afines lineales. Para eso, se define una matriz de la siguiente estructura:
 
+![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/MatrizDeTransformacionLinealAfin.png)
 
+donde $a_0$, $a_1$, $a_2$ son de la transformada $T_x(x,y) = $a_0x + a_1y + a_2$
+    y $b_0$, $b_1$, $b_2$ son de la transformada $T_y(x,y) = $b_0x + b_1y + b_2$
+
+Los pasos son los siguientes:
+- Definir la matriz A
+- Definir la transformada afín (Mediante el comando `T = maketform('affine', A)`)
+- $I_t = imtransform(I, T)$ (donde $I_t$ es la imagen resultante con la transformación, $I$ es la imagen original y $T$ es la transformada afín). \[PD: este comando tiene algo que no se hace por sí solo cuando se implementa pixel por pixel: Se rellenan los pixeles negros.]
+
+(Estos pasos se pueden realizar para no tener que hacer las operaciones pixel a pixel, por lo que es ideal para corroborar resultados).
+
+Su código está dado por:
+```Octave
+pkg load image
+
+% Ejemplo de rippling de una imagen
+I=imread('img.jpg');
+I=imresize(I, [128,128]);
+subplot(1, 2, 1)
+imshow(I)
+title('Imagen original')
+
+% Escalar una imagen con el comando imtransform
+sx = 0.5; sy = 1.5;
+
+% Recordemos que la estructura de una transformada afín:
+% x' = Tx(x,y) = a0*x + a1*y + a2 = sx*x + 0*y  + 0 = sx*x
+% y' = Ty(x,y) = b0*x + b1*y + b2 = 0*x  + sy*y + 0 = sy*y
+
+% Paso 1: Definir matriz A
+A=[sx 0  0;
+   0  sy 0;
+   0  0  1];
+
+% Paso 2: Definir la transformada
+T = maketform('affine',A);
+
+% Paso 3:
+It = imtransform(I,T);
+
+% Plot
+subplot(1,2,2)
+imshow(It)
+title('Imagen transformada con una transformación escalar')
+```
+
+![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/TransformacionAfinConComandoDeOctave.png)
+
+<br></br>
+
+### Videos
+Hasta el momento se ha estudiado cómo cargar y utilizar imágenes.
+
+Ahora veremos algunos temas relacionados a videos:
+
+```Octave
+pkg load image
+pkg load video
+
+V = VideoReader('VIDEO.mp4'); % Se carga el video
+fr = V.NumberOfFrames; % Numero de frames (cuadros)
+m = V.Height; n = V.Width; % Dimensiones de cada cuadro
+
+% Espacio para crear un nuevo video con las dimensiones del video original
+Y = zeros(m,n,3,fr);
+
+% Leer video y ponerle ruido a los frames
+
+for k=1:fr
+    Z1=readFrame(V); %Leer el frame k. Z1 es una imagen de tamaño m x n x 3
+    Y(:,:,1,k) = im2double(Z1(:,:,1))+randn(m,n); %Canal rojo
+    Y(:,:,2,k) = im2double(Z1(:,:,2))+randn(m,n); %Canal verde
+    Y(:,:,3,k) = im2double(Z1(:,:,3))+randn(m,n); %Canal azul
+end
+
+%Crear Video
+video = VideoWriter('video_salida.mp4');
+for i=1:fr
+  writeVideo(video,im2uint8(Y(:,:,:,i)));
+end
+close(video)
+```
 
 
 <br></br>
