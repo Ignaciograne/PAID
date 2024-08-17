@@ -730,26 +730,59 @@ fr = V.NumberOfFrames; % Numero de frames (cuadros)
 m = V.Height; n = V.Width; % Dimensiones de cada cuadro
 
 % Espacio para crear un nuevo video con las dimensiones del video original
-Y = zeros(m,n,3,fr);
+Y = zeros(m,n,3,fr); % El 3 es para indicar que va a ser un video a color
 
 % Leer video y ponerle ruido a los frames
-
 for k=1:fr
-    Z1=readFrame(V); %Leer el frame k. Z1 es una imagen de tamaño m x n x 3
-    Y(:,:,1,k) = im2double(Z1(:,:,1))+randn(m,n); %Canal rojo
-    Y(:,:,2,k) = im2double(Z1(:,:,2))+randn(m,n); %Canal verde
-    Y(:,:,3,k) = im2double(Z1(:,:,3))+randn(m,n); %Canal azul
+    Z1=readFrame(V); % Leer el frame k. Z1 es una imagen de tamaño m x n x 3
+
+    % Ahora le sumo un ruido gaussiano a cada canal del frame
+    Y(:,:,1,k) = im2double(Z1(:,:,1))+randn(m,n); % Canal rojo
+    Y(:,:,2,k) = im2double(Z1(:,:,2))+randn(m,n); % Canal verde
+    Y(:,:,3,k) = im2double(Z1(:,:,3))+randn(m,n); % Canal azul
 end
 
-%Crear Video
+% Crear Video
 video = VideoWriter('video_salida.mp4');
 for i=1:fr
-  writeVideo(video,im2uint8(Y(:,:,:,i)));
+    writeVideo(video,im2uint8(Y(:,:,:,i)));
 end
 close(video)
 ```
 
+Nota: El profesor menciona que este enfoque es bueno porque en el curso no se tocará el tema del audio al ser un curso de meramente imágenes.
 
+<br></br>
+
+### Medianas para recuperación de información
+A veces se pierde información de una imagen.
+
+Por ejemplo, para la siguiente imagen:
+```Octave
+A = rand(3,3);
+imshow(A)
+```
+![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/ImagenPierdeInformacion1.png)
+
+podría ocurrir que se perdiera la información de uno de sus pixeles. Por ejemplo el del centro. Esto ocasionaría que se viera tal que:
+Por ejemplo, para la siguiente imagen:
+```Octave
+A(2,2) = 0;
+imshow(A)
+```
+![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/ImagenPierdeInformacion2.png)
+
+Pero, gracias a la estadística, es posible recuperar su información por medio de los pixeles adyacentes. Para ello, se utiliza el concepto de mediana.
+Por ejemplo, para la siguiente imagen:
+```Octave
+m = A(:); % Vectoriza la matriz
+v = median(m); % Obtiene la mediana
+A(2,2) = v; % Asigna en el pixel negro la información 'recuperada'
+imshow(v)
+```
+![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/ImagenPierdeInformacion3.png)
+
+de esta manera, se asgina un valor que no es escrito al azar, sino que está escrito con la información de los pixeles adyacentes de la imagen.
 <br></br>
 
 
