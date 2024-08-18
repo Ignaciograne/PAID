@@ -904,7 +904,159 @@ title('Histograma')
 A veces se tienen imágenes con tonalidades muy grises. Por ejemplo:
 ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/ImagenDeEjemploEnTonalidadGris.png)
 
-pero, puede ser que se desee que una imagen tenga una distribución de pixeles que abarque más tonalidades, de tal manera que, al final de cuentas, siga manteniéndose el comportamiento, pero que ya no esté todo acumulado en una tonalidad de pixeles tan similar, sino que abarque un mayor rango de la escala de grises (desde 0 hasta 255). 
+pero, puede ser que se desee que una imagen tenga una distribución de pixeles que abarque más tonalidades, de tal manera que, al final de cuentas, siga manteniéndose el comportamiento, pero que ya no esté todo acumulado en una tonalidad de pixeles tan similar, sino que abarque un mayor rango de la escala de grises (desde 0 hasta 255).
+
+1. Ecualización del histograma: Esta técnica cambia la distribución de niveles de grises de una imagen, de tal manera que se obtiene un histograma uniforme en el que el porcentaje de pixeles de cada nivel de gris es el mismo. Básicamente, buscamos que todo no esté acumulado en unos pocos pixeles, sino en todo el rango.
+
+    Para este método, se necesita una función auxiliar $T(A)$, que evalúe a cada uno de los pixeles. Tal que:
+      - $T(A)$ tiene un comportamiento creciente en \[0, 255\].
+      - $0 \leq \[T(A)\]_k \leq 1$.
+      - $\[T(A) \]_k = S_k = \sum _{j=0}^{k} \frac{h(j)}{mxn}$, donde $mxn$ representa el tamaño de la imagen.
+    
+      Ej: Si $h = \[1 \, 3 \, 2 \, 4 \]$ de una imagen de $2x5$, entonces:
+    
+      $T(A) = \left\[ \frac{1}{10} \frac{4}{10} \frac{6}{10} \frac{10}{10} \right] = \left[\frac{1}{10} \frac{2}{5} \frac{3}{5} 1 \right]$
+    
+      que corresponden a valores que se encuentran creciendo, lo cual cumple la primera condición del comportamiento creciente. A este vector se le llama vector acumulado.
+    
+    Nota: El método de ecualización es modificar los pixeles de una imagen A de 8 bits, por el valor multiplicado por $S_k \cdot 255$. Es decir:
+      - Si $A(x,y) = k$, es decir, si el valor del pixel va desde 0 hasta 255, entonces voy a obtener la imagen modificada de $B(x,y) = int(S_k) \cdot 255$. A B se le conoce como *imagen ecualizada*.
+        Pasos: Sea A una imagen de tamaño $mxn$
+        - Calcular histograma $h ∈ \mathbb{R}^{256}$.
+        - Calcular $T(A) = \[S_0 \quad S_1 \quad ... \quad S_{255} \]$, donde $\sum _{j=0}^{k} \frac{h(j)}{mxn}$
+        - Crear la imagen ecualizada B, donde $B(x,y) = int(S_k \cdot 255)$ si $A(x,y)=k$.
+
+
+    ```Octave
+    pkg load image
+    
+    A=imread('img.jpg');
+    subplot(2,2,1)
+    imshow(A);
+    title('Imagen original')
+    
+    
+    % Calcular el histograma de A
+    h=zeros(256,1);
+    for i=0:255
+      h(i+1)=sum(sum(A==i));
+    end
+    subplot(2,2,2)
+    bar(0:255,h)
+    title('Histograma')
+    xlim([0 255])
+    
+    
+    % Distribución Acumulada
+    ac=zeros(256,1);
+    [m,n]=size(A);
+    for i=0:255
+      ac(i+1)=sum(h(1:i+1))/(m*n);
+    end
+    
+    % Obtener la nueva imagen aplicando la técnica de ecualización
+    B=zeros(m,n); A=double(A);
+    for x=1:m
+      for y=1:n
+        B(x,y)=round(ac(A(x,y)+1)*255);
+      end
+    end
+    B=uint8(B);
+    subplot(2,2,3)
+    imshow(B)
+    title('Imagen ecualizada')
+    
+    % Calcular el histograma de B
+    h2=zeros(256,1);
+    for i=0:255
+      h2(i+1)=sum(sum(B==i));
+    end
+    subplot(2,2,4)
+    bar(0:255,h2)
+    title('Histograma de B')
+    xlim([0 255])
+    ```
+    ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/TecnicasDeEcualizacion1.png)    
+  
+
+2. Estiramiento del histograma: Esta técnica consiste en una transformación lineal que expande parte del histograma original, tal que la intensidad original que está en un rango $\[r_{min}, r_{max} \]$ ocupe la escala $\[0, 255]$.
+
+    Con esta técnica busco obligar a que el histograma tome todos los posibles valores de toda la escala. En el primer caso, se intentaba ajustar con los valores de la mejor manera posible, sin necesidad de estirar todo. En este caso sí estaríamos obligando ese estiramiento.
+    ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/EstiramientoDelHistogramaIdea.png)  
+    
+    Matemáticamente, cada pixel de la nueva imagen $B$ se obtiene con la fórmula:
+    $B(x,y) = int(frac{255}{r_{max} - r_{min}} (A(x,y) - r_{min}))$
+    donde:
+      - $r_{min}$ y $r_{max}$ son los valores más pequeños y más grandes en escala de grises de la imagen A, respectivamente.
+    ```Octave
+    pkg load image
+    
+    A=imread('img1.jpg');
+    subplot(2,2,1)
+    imshow(A)
+    title('Imagen original')
+    
+    subplot(2,2,2)
+    imhist(A)
+    title('Histograma de la imagen original')
+    
+    A=double(A);
+    r_min=min(min(A)); r_max=max(max(A));
+    
+    % Operacion de Estiramiento
+    B=floor(255/(r_max-r_min))*(A-r_min);
+    B=uint8(B);
+    
+    subplot(2,2,3)
+    imshow(B)
+    title('Imagen estirada')
+    
+    subplot(2,2,4)
+    imhist(B)
+    title('Histograma de la imagen estirada')
+    ```
+    ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/EstiramientoDelHistograma.png)  
+
+
+3. Reducción de histograma: Esta técnica modifica el histograma original de tal manera que comprime la dinámica de escala de grises $\[r_{min}, r_{max} \]$ a otra nueva escala $\[s_{min}, s_{max} \]$. En esta nueva escala, se debe de cumplir que:
+    - $r_{min} \leq s_{min}$
+    - $s_{max} \leq r_{max}$
+    
+    ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/ReduccionDelHistogramaIdea.png)
+    
+    La fórmula matemática para hacer este cambio es la siguiente:
+    $B(x,y) = int\left(\left\[ \frac{s_{max} - s_{min}}{r_{max} - r_{min}} \right\] \cdot (A(x,y) - r_{min}) + s_{min} \right)$
+   ```Octave
+   pkg load image
+
+    A=imread('peppers.jpg');
+    subplot(2,2,1)
+    imshow(A)
+    title('Imagen original')
+    
+    subplot(2,2,2)
+    imhist(A)
+    title('Histograma de la imagen original')
+    
+    A=double(A);
+    r_min=min(min(A))
+    r_max=max(max(A))
+    s_min=r_min+70 % s_min debe ser más grande que r_min
+    s_max=r_max-70 % s_max debe ser más pequeño que r_max
+    
+    %Operacion de Estiramiento
+    B=((s_max-s_min)/(r_max-r_min))*(A-r_min)+s_min;
+    B=uint8(B);
+    
+    subplot(2,2,3)
+    imshow(B)
+    title('Imagen reducida')
+    
+    subplot(2,2,4)
+    imhist(B)
+    title('Histograma de la imagen reducida')
+   ```
+   ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/ReduccionDelHistograma.png)
 
 <br></br>
 
