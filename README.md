@@ -993,7 +993,7 @@ pero, puede ser que se desee que una imagen tenga una distribución de pixeles q
     ```Octave
     pkg load image
     
-    A=imread('img1.jpg');
+    A=imread('img.jpg');
     subplot(2,2,1)
     imshow(A)
     title('Imagen original')
@@ -1031,7 +1031,7 @@ pero, puede ser que se desee que una imagen tenga una distribución de pixeles q
    ```Octave
    pkg load image
 
-    A=imread('peppers.jpg');
+    A=imread('img.jpg');
     subplot(2,2,1)
     imshow(A)
     title('Imagen original')
