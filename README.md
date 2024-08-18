@@ -900,6 +900,8 @@ title('Histograma')
 ```
 ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/HistogramaManera3.png)
 
+<br></br>
+
 #### Técnicas para modificar una imagen a través del histograma
 A veces se tienen imágenes con tonalidades muy grises. Por ejemplo:
 ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/ImagenDeEjemploEnTonalidadGris.png)
