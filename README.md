@@ -783,12 +783,128 @@ imshow(v)
 ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/ImagenPierdeInformacion3.png)
 
 de esta manera, se asgina un valor que no es escrito al azar, sino que está escrito con la información de los pixeles adyacentes de la imagen.
+
 <br></br>
 
 
 
 ## Clase 7
+### Procesamiento de imágenes utilizando histogramas
+Primeramente, ¿qué es un histograma?
 
+Sea A una imagen a escala de grises, de tamaño $mxn$. Entonces, el histograma de una imagen es la representación de la frecuencia de aparición de uno de los niveles de grises de una imagen.
+
+Asumiremos que la imagen A está en formato de 8 bits: $A(x,y) ∈$ {0, 1, 2, ... 255}.
+
+Entonces, quiero saber cuántas veces aparece el 0, cuántas veces aparece el 1, el 2, el 3... el 255, etc.
+
+Sea $h ∈ \mathbb{R}^{256}$ (un vector de 256), entonces:
+  - $h(k) = h_k = \text{card}$ { $(x,y) / A(x,y) = k$ }
+  donde:
+    - $k ∈$ {0, 1, 2, ..., 255}
+   
+Ej: Considere la matriz $A ∈ \mathbb{R}$, tal que:
+
+![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/MatrizParaHistograma.png)
+
+queda claro que los valores que toma A están en el conjunto {0, 1, 2, 3, 4, 5}, donde se tiene:
+- $0 \rightarrow 6$ reps
+- $1 \rightarrow 5$ reps
+- $2 \rightarrow 2$ reps
+- $3 \rightarrow 1$ reps
+- $4 \rightarrow 1$ reps
+- $5 \rightarrow 2$ reps
+
+entonces: $h = \[6 \, 4 \, 2 \, 1 \, 1 \, 2 \]$.
+
+La representación del histograma se da por medio de una gráfica de bastones:
+![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/HistogramaDeMatrices.png)
+
+Ahora, ¿cómo se trata esto para imágenes?
+
+Existen tres maneras para calcular un histograma. Todos dan el mismo resultado, aunque la visualización pueda ser un poco diferente. Pero, al final de cuentas, sigue siendo lo mismo.
+
+1. Primera técnica: Ir entrada por entrada
+```Octave
+pkg load image
+
+A=imread('img.jpg');
+subplot(2,2,1)
+imshow(A);
+title('Imagen Original')
+
+% Forma 1 de calcular el histograma
+h1=zeros(256,1); % h1 = [h1(0) h1(1) ... h1(255)]
+[m,n]=size(A);
+
+for x=1:m
+  for y=1:n
+    h1(A(x,y)+1) = h1(A(x,y)+1)+1;
+  end
+end
+subplot(2,2,2)
+bar(0:255,h1)
+title('Histograma')
+xlim([0 255])
+```
+![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/HistogramaManera1.png)
+
+esta técnica es un poco "fuerza bruta", ya que recorre entrada por entrada.
+
+
+2. Segunda técnica (método más eficiente): Utilizar las funcionalidades de Octave
+Lo que se hace es aprovechar una funcionalidad de matriz binaria de Octave, donde es posible obtener una matriz que tenga 1's en las posiciones donde se cumple una condición, y 0's en las posiciones donde no.
+```Octave
+A = [4 5 7 1 3; 4 1 1 4 6; 1 7 5 9 3]
+I = (A == 4)
+```
+![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/HistogramaManera2TrucoDetras.png)
+
+Esto permite diseñar un for que simplemente vaya desde 0 hasta 255, preguntando en dónde se tienen 1's:
+```Octave
+pkg load image
+
+A=imread('img.jpg');
+subplot(1,2,1)
+imshow(A);
+title('Imagen original')
+
+% Forma 2 de calcular el histograma
+h2 = zeros(256,1); % h1 = [h1(0) h1(1) ... h1(255)]
+for i=0:255
+  h2(i+1) = sum(sum(A==i)) % Se deben de agregar dos sum porque
+                           % sino solamente sumaría columnas
+end
+subplot(1,2,2)
+bar(0:255,h2)
+title('Histograma')
+xlim([0 255])
+```
+
+![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/HistogramaManera2.png)
+
+
+3. Tercera técnica (Desventaja: No genera ningún vector): Graficar mediante Octave
+```Octave
+pkg load image
+
+A=imread('img.jpg');
+subplot(1,2,1)
+imshow(A);
+title('Imagen original')
+
+% Forma 3 de calcular el histograma
+subplot(1,2,2)
+imhist(A)
+title('Histograma')
+```
+![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/HistogramaManera3.png)
+
+#### Técnicas para modificar una imagen a través del histograma
+A veces se tienen imágenes con tonalidades muy grises. Por ejemplo:
+![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/ImagenDeEjemploEnTonalidadGris.png)
+
+pero, puede ser que se desee que una imagen tenga una distribución de pixeles que abarque más tonalidades, de tal manera que, al final de cuentas, siga manteniéndose el comportamiento, pero que ya no esté todo acumulado en una tonalidad de pixeles tan similar, sino que abarque un mayor rango de la escala de grises (desde 0 hasta 255). 
 
 <br></br>
 
@@ -802,6 +918,12 @@ Feriado
 
 
 ## Clase 9
+
+
+<br></br>
+
+
+
 ## Clase 10
 ## Clase 11
 ## Clase 12
