@@ -1284,7 +1284,7 @@ Nota: En este ejemplo de utilizaron dos imágenes del mismo tamaño, pero este m
 
 
 ## Clase 11
-TODO
+En esta clase vamos a estudiar el concepto de **convolución**. Específicamente, la convolución matricial. 
 
 <br></br>
 
