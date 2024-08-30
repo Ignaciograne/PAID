@@ -1079,7 +1079,50 @@ La clase no se dio por problemas de conexión del profesor.
 
 
 ## Clase 10
+El día de hoy vamos a ver Especifiación del Histograma/Coincidencia del Histograma o *Histogram matching* (Al fin y al cabo, relacionar un histograma con el otro).
 
+La idea general es tratar de manipular el comportamiento del histograma de una imagen (o un conjunto de imágenes) A para que se comporte como el histograma de otra imagen B. (OJO: No se busca tener una copia del histograma de A, pero sí tener un comportamiento similar en $Hist_A$ e $Hist_B$.
+
+<br>
+
+Este procedimiento se divide en tres pasos:
+
+**Previamente** se definen dos imágenes en escala de grises:
+
+  Sean $I_1$, $I_2$ dos imágenes a escala de grises de tamaño $m \times n$.
+  
+  Y sea $h_1$ el vector histograma de la imagen $I_1$ y $h_2$ el vector histograma de $I_2$.
+    
+  Además, recuerde que cada histograma ($h_1$ o $h_2$) es un vector, donde cada posición indica cuántos pixeles de ese valor tiene el histograma. Así: $h_1 = (h_1(0), h_1(1), ..., h_1(255)) \in \mathbb{R}^{256}$, y $h_2 = (h_2(0), h_2(1), ..., h_2(255)) \in \mathbb{R}^{256}$.
+
+  En este caso, queremos que $I_1$ tenga un histograma similar a $I_2$ (es decir, que $h_1$ se parezca a $h_2$ \[mediante el proceso de convertir $h_1$ a $h_2$]). Por ello:
+
+1. Calcular $h_1$ (cada una de sus entradas p)
+2. Calcular $h_2$ (cada una de sus entradas q)
+3. Relacionar los dos histogramas:
+
+   $h_1(p) = h_2(q)$
+
+   $h_2^{-1}(h_1(p)) = h_2^{-1}(h_2(q))$
+
+   $q = h_2^{-1}(h_1(p))$
+
+<br>
+
+Algunas observaciones:
+
+- En el caso de imágenes, no se conoce la función inversa del histograma. Por ello, trabajaremos con un método alternativo que involucra la distribución acumulada de ambos histogramas.
+
+  Entonces, sean $H_1$ y $H_2$ las distribuciones acumuladas de los histogramas $h_1$ y $h_2$ respectivamente, donde:
+
+    $H_1 = (H_1(0), H_1(1), ..., H_1(255)) \Rightarrow H_1(j) = \sum_{k=0}^{j} \frac{h_1(k)}{m \times n}$.
+
+    NOTA: El valor para $H_1(255)$ **deberá** de ser 1 (100 %) ya que es la suma de todos los elementos presentes.
+
+    <br>
+
+    El procedimiento es análogo para $H_2$:
+    $H_2 = (H_2(0), H_2(1), ..., H_2(255))$, donde $H_2(255) = 1$
 
 <br></br>
 
