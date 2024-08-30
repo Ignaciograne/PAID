@@ -1291,7 +1291,7 @@ En esta clase vamos a estudiar el concepto de **convolución**. Específicamente
 
 
 ## Clase 12
-*Pendiente de subir por parte del profesor*
+TODO
 
 <br></br>
 
