@@ -1172,12 +1172,115 @@ Considere 2 imágenes $I_1$, $I_2$, con vectores histogramas $h_1$ y $h_2$ y dis
   
   </div>
 
+- Imagen 3 (Imagen 1 con el histograma de la imagen 2):
 
-Entonces, ¿cómo puedo obtener una imagen nueva cuyo comportamiento ya no tenga el Histograma 1, sino una distribución como la del Histograma 2?
+  Entonces, ¿cómo puedo obtener una imagen nueva cuyo comportamiento ya no tenga el Histograma 1, sino una distribución como la del Histograma 2?
 
-Lo que quiero ver es, ¿cuál valor de la columna $H_1(m)$ minimiza con respecto a toda la columna de $H_2(n)$? Matemáticamente, esta comparación se ve tal que:
+  Lo que quiero ver es, ¿cuál valor de la columna $H_1(m)$ minimiza con respecto a toda la columna de $H_2(n)$? Matemáticamente, la idea es aplicar la fórmula explicada previamente con los acumulados de la siguiente tabla:
+  
+  <div align="center">
+    
+  | $H_1(m)$ | $H_2(n)$ |
+  | :------: | :------: |
+  |   0.19   |    0     |
+  |   0.44   |    0     |
+  |   0.65   |    0     |
+  |   0.81   |   0.15   |
+  |   0.89   |   0.35   |
+  |   0.95   |   0.65   |
+  |   0.98   |   0.85   |
+  |     1    |     1    |
 
-  $$
+  </div>
+
+  de tal manera que, para cada fila de $H_1(m)$ se busca obtener la menor diferencia presente en toda la columna de $H_2(n)$:
+
+  - Para $H_1(m) = 0.19$:
+    
+    $0.19 - 0 = 0.19$
+    
+    $0.19 - 0 = 0.19$
+    
+    $0.19 - 0 = 0.19$
+    
+    $0.19 - 0.15 = 0.04$
+    
+    $0.19 - 0.35 = 0.16$
+    
+    $0.19 - 0.65 = 0.46$
+    
+    $0.19 - 0.85 = 0.66$
+    
+    $0.19 - 1 = 0.81$
+
+
+    Por lo que, dado que la menor diferencia se encuentra en la fila $3$ ($0.19 - 0.15 = 0.04$), este será el $n$ utilizado para $m = 0$ (fila en la cual $H_1(m) = 0.19$).
+
+    Replicando iterativamente este proceso para cada fila de $H_1(m)$ se obtiene la siguiente tabla:
+
+    <div align="center">
+    
+    | m | $H_1(m)$ | $H_2(n)$ | n |
+    |:-:|:--------:|:--------:|:-:|
+    | 0 |   0.19   |    0     | 3 |
+    | 1 |   0.44   |    0     | 4 |
+    | 2 |   0.65   |    0     | 5 |
+    | 3 |   0.81   |   0.15   | 6 |
+    | 4 |   0.89   |   0.35   | 6 |
+    | 5 |   0.95   |   0.65   | 7 |
+    | 6 |   0.98   |   0.85   | 7 |
+    | 7 |     1    |     1    | 7 |
+    
+  </div>
+
+  Por lo tanto, utilizando ahora esta nueva distribución es posible construir el vector $h_3$ como:
+
+$$
+h_3 =
+\begin{pmatrix}
+h_3(0) \\
+h_3(1) \\
+h_3(2) \\
+h_3(3) \\
+h_3(4) \\
+h_3(5) \\
+h_3(6) \\
+h_3(7) \\
+\end{pmatrix}
+\=
+\begin{pmatrix}
+0 \\
+0 \\
+0 \\
+19 \\
+25 \\
+21 \\
+16+8 \\
+6+3+2 \\
+\end{pmatrix}
+\=
+\begin{pmatrix}
+0 \\
+0 \\
+0 \\
+19 \\
+25 \\
+21 \\
+24 \\
+11 \\
+\end{pmatrix}
+$$
+
+<div align="center">
+    
+  ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/HistogramI3.png)
+    
+</div>
+
+
+
+
+
 
 
 Nota: En este ejemplo de utilizaron dos imágenes del mismo tamaño, pero este método es perfectamente aplicable a imágenes de distintos tamaños, ya que al fin y al cabo utiliza distribuciones acumuladas y toda distribución acumulada (independientemente de la imagen) tendrá un vector de 256.
