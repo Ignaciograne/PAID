@@ -1072,15 +1072,33 @@ Feriado
 
 
 ## Clase 9
-
+La clase no se dio por problemas de conexión del profesor.
 
 <br></br>
 
 
 
 ## Clase 10
+
+
+<br></br>
+
+
+
 ## Clase 11
+TODO
+
+<br></br>
+
+
+
 ## Clase 12
+*Pendiente de subir por parte del profesor*
+
+<br></br>
+
+
+
 ## Clase 13
 ## Clase 14
 ## Clase 15
