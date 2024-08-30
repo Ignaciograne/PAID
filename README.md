@@ -1286,6 +1286,108 @@ Nota: En este ejemplo de utilizaron dos imágenes del mismo tamaño, pero este m
 ## Clase 11
 En esta clase vamos a estudiar el concepto de **convolución**. Específicamente, la convolución matricial. 
 
+### Vecindarios y convoluciones
+El procesamiento de imágenes por vecindario significa modificar el valor de un pixel, utilizando la información de los pixeles vecinos. Por ejemplo:
+
+![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/IdeaDePixelesVecinos.png)
+
+este concepto no es nuevo, ya que de hecho fue parte de lo utilizado en la [Tarea \#1](https://github.com/MarinGE23/CE5501-PAID/tree/main/Tarea%201%20-%20Grupo%204) del curso.
+
+Entonces, las operaciones que se realizan en un procesamiento por vecindario normalmente siguen los siguientes pasos:
+
+Sea $A$ una imagen de tamaño $m \times n$:
+1. Definir un pixel imagen: $A_{i,j}$.
+2. Desarrollar una operación que involucra sólo los pixeles del vecindario: $A_{i-1, j-1}$, $A_{i-1,j}$, ..., $A_{i+1,j}, $A_{i+1,j+1}$. NOTA: En este caso se está utilizando un vecindario de $3 \times 3$, pero se pueden utilizar vecindarios más grandes.
+3. Aplicar el resultado de la operación del pixel en la misma coordenada $(i,j)$ de la imagen de salida $B$.
+4. Repetir el proceso en cada uno de los pixeles
+
+Nota: En esta parte del curso estudiaremos un conjunto de métodos relacionados con el procesamiento por vecindarios, que involucra la operación de convolución.
+
+Pero, ¿qué es la convolución?
+- Convolución en vectores (1 dimensión):
+
+  Sea $x = \[x_1, x_2, ..., x_m] \in \mathbb{R}^m$ y sea $y = \[y_1, y_2, ..., y_m] \in \mathbb{R}^n$. 
+  
+  Entonces la convolución de $x$ y $y$ es un vector $z \in \mathbb{R}^{m+n-1}$, definido de la siguiente manera matemática:
+
+  $Z_i = (x \ast y)(i) = \sum_{j=máx(1,i+1-n)}^{min(i,m)} x_j \cdot y_{i-j+1}$
+
+
+  Y en código:
+
+  ```Octave
+  clc; clear
+
+  x=[-2 1 2]; y=[-4 3 4 1];
+  
+  m=length(x); n=length(y);
+  
+  z=zeros(1,m+n-1);
+  
+  for i=1:m+n-1
+    a=max([1 i+1-n]); b=min([i m]);
+    for j=a:b
+      z(i)=z(i)+x(j)*y(i-j+1);
+    end
+  end
+  
+  z
+  ```
+
+<br>
+
+- Convolución matricial (2 dimensiones):
+
+  Sea $A \in \mathbb{R}^{m_1 \times n_1}$ y $B \in \mathbb{R}^{m_2 \times n_2}$. La convolución se $A$ y $B$ se denota como:
+
+  $z = A \ast B$
+
+  donde $z \in \mathbb{R}^{(m_1 + m_2 - 1) \times (n_1 + n_2 - 1)}$, definido por:
+
+  $z_{j,k} = (A \ast B)\_{j,k} = \sum_{p = max(1,j-m_2 + 1)}^{min(j, m_1)} \sum_{max(1,k-n_2 + 1)}^{min(k, n_1)} A_{p,q} \cdot B_{j-p+1, k-q+1}$
+
+  La idea es implementar esto en Octave para un punto de las tareas cortas, pero de ahora en adelante en el curso se utilizarán las funciones implementadas en los lenguajes de programación para obtener la convolución de matrices. Estos son:
+  - convolve2d $\rightarrow$ Python (disponible por medio de la biblioteca scipy)
+  - conv2 $\rightarrow$ Octave
+
+    Ejemplo con los comandos propios de Octave para la convolución:
+    ```Octave
+    % Ejemplo de convolucion matricial aplicado a imagenes
+
+    A = im2double(imread('img1.jpg')); % Se transforma para aplicar
+                                       % operaciones matematicas
+                                       % Supongamos dimensiones de 256x256.
+    B = 1/9*ones(3); % Matriz de 3x3 con 1/9 como valor de cada celda
+
+    z = conv2(A, B);
+
+    size(A) % Muestra 256
+    size(B) % Muestra 258 (256+3-1)
+
+    subplot(1,2,1)
+    imshow(A)
+    title('Imagen original')
+
+    subplot(1,2,2)
+    imshow(Z)
+    title('Imagen convolucionada')
+    ```
+ 
+    ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/ConvolucionConBorde.png)
+
+    A esta función se le denomina *filtro del promedio*, ya que lo que está haciendo es suavizando los valores promedio utilizando los valores anteriores (Note que se están obteniendo los valores alrededor de cada pixel para obtener un promedio de valores. A eso se le llama *suavizar*).
+
+    <br>
+
+    No obstante, note cómo se agrega un 'padding' alrededor de la imagen convolucionada. Esto es posible de purgar si se agrega el siguiente parámetro a la convolución:
+
+    ```Octave
+    z = conv2(A, B, 'same'); % Hace que Z sea del mismo tamanno que A
+    ```
+
+    ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/ConvolucionSinBorde.png)
+
+
 <br></br>
 
 
