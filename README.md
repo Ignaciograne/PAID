@@ -1124,6 +1124,64 @@ Algunas observaciones:
     El procedimiento es análogo para $H_2$:
     $H_2 = (H_2(0), H_2(1), ..., H_2(255))$, donde $H_2(255) = 1$
 
+    <br>
+
+    La intensidad de gris $m \in$ {0, 1, ..., 255} de la imagen A se cambiará por la intensidad que minimice la distancia de las distribuciones acumuladas; es decir, seleccionar *n* tal que:
+
+    $|H_1(m) - H_2(n)| = \text{min}_{k=0,1,...255} |H_1(m) - H_2(k)|$
+
+    en donde $m \rightarrow n$. Si hay varios valores que se repiten, se suman dichos valores.
+
+Por ejemplo:
+
+Considere 2 imágenes $I_1$, $I_2$, con vectores histogramas $h_1$ y $h_2$ y distribuciones acumuladas $H_1$ y $H_2$ respectivamente.
+
+- Imagen 1:
+  <div align="center">
+    
+  |  m  | $h_1(m)$ | $H_1(m)$ |
+  | :-: | :------: | :------: |
+  |  0  |    19    |   0.19   |
+  |  1  |    25    |   0.44   |
+  |  2  |    21    |   0.65   |
+  |  3  |    16    |   0.81   |
+  |  4  |    8     |   0.89   |
+  |  5  |    6     |   0.95   |
+  |  6  |    3     |   0.98   |
+  |  7  |    2     |     1    |
+
+  ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/HistogramI1.png)
+  
+  </div>
+  
+- Imagen 2:
+  <div align="center">
+    
+  |  n  | $h_2(n)$ | $H_2(n)$ |
+  | :-: | :------: | :------: |
+  |  0  |    0     |    0     |
+  |  1  |    0     |    0     |
+  |  2  |    0     |    0     |
+  |  3  |    15    |   0.15   |
+  |  4  |    20    |   0.35   |
+  |  5  |    30    |   0.65   |
+  |  6  |    20    |   0.85   |
+  |  7  |    15    |     1    |
+
+  ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/HistogramI2.png)
+  
+  </div>
+
+
+Entonces, ¿cómo puedo obtener una imagen nueva cuyo comportamiento ya no tenga el Histograma 1, sino una distribución como la del Histograma 2?
+
+Lo que quiero ver es, ¿cuál valor de la columna $H_1(m)$ minimiza con respecto a toda la columna de $H_2(n)$? Matemáticamente, esta comparación se ve tal que:
+
+  $$
+
+
+Nota: En este ejemplo de utilizaron dos imágenes del mismo tamaño, pero este método es perfectamente aplicable a imágenes de distintos tamaños, ya que al fin y al cabo utiliza distribuciones acumuladas y toda distribución acumulada (independientemente de la imagen) tendrá un vector de 256.
+
 <br></br>
 
 
