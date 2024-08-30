@@ -1277,12 +1277,6 @@ $$
     
 </div>
 
-
-
-
-
-
-
 Nota: En este ejemplo de utilizaron dos imágenes del mismo tamaño, pero este método es perfectamente aplicable a imágenes de distintos tamaños, ya que al fin y al cabo utiliza distribuciones acumuladas y toda distribución acumulada (independientemente de la imagen) tendrá un vector de 256.
 
 <br></br>
