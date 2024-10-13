@@ -1402,6 +1402,10 @@ TODO
 ## Clase 13
 ## Clase 14
 ## Clase 15
+No se impartió porque al profesor le surgió una reunión.
+
+<br></br>
+
 ## Clase 16
 ## Clase 17
 ## Clase 18
