@@ -1387,6 +1387,64 @@ Pero, ¿qué es la convolución?
 
     ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/ConvolucionSinBorde.png)
 
+  <br>
+  
+### Filtros en el dominio espacial
+
+El dominio espacial de una imagen se refiere al plano de la imagen original. Es decir, los valores que tiene cada uno de los pixeles en la imagen. 
+
+Las transformaciones vistas anteriormente en el curso son ejemplos de métodos que se aplican en el dominio espacial de la imagen.
+
+En esta parte del curso, estudiaremos un conjunto de métodos llamados *filtros*, que nos permitirá hacer ciertas modificaciones a las imágenes. Por ejemplo, suavizar contornos y detectar bordes.
+
+**Nota**: Los filtros que estudiaremos se basarán en el concepto de convolución. Un ejemplo de filtro que no usa la convolución, es el filtro de la mediana.
+
+Nosotros definiremos el concepto de "filtro" a la operación de convolución que se aplica a una imagen A con una matriz B. Esta matriz B se conocerá como **máscara**.
+
+Los filtros que se basan en la convolución se clasifican en dos grupos:
+
+**1. Filtros paso-bajo (Low-pass)**: El efecto de estos filtros es atenuar los componentes de alta frecuencia (detalles finos de la imagen) y preservar componentes de baja frecuencia (detalles gruesos de la imagen).
+
+**2. Filtros paso-alto (High-pass)**: El efecto de estos filtros es preservar o mejorar los componentes de alta frecuencia, principalmente para enfatizar bordes de una imagen.
+
+Vamos a definir cada uno de estos filtros con mayor detalle:
+
+#### Filtros paso-bajo
+Sea $A \in \mathbb{R}^{m \times n}$ una imagen a escala de grises.
+
+1. Filtro promedio: Utiliza una máscara:
+
+    ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/MatrizDe1s.png)
+    
+    Este filtro da como resultado la imagen aplicando el promedio de los pixeles vecinos del pixel de referencia. Esto es:
+    
+    ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/FiltroPromedioMatriz.png)
+    
+    Nota: Si $A \in \mathbb{R}^{m \times n}$ y $B \in \mathbb{R}^{3 \times 3}$, entonces $(A \ast B) \in \mathbb{R}^{(m+3-1) \times (n+3-1)}$. Se recomienda que el tamaño de la convolución sea igual al tamaño de la imagen $A$. Para esto, se debe de eliminar la primera fila y columna y la última fila y columna de $A \ast B$.
+    
+    En GNU/Octave, esto se obtiene con el comando:
+    ```Octave
+    conv2('A', 'B', 'same')
+    ```
+    
+    ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/ImagenOriginalVsImagenFiltroPromedio.png)
+    
+    
+    Nota 2: Normalmente, los filtros son de tamaño $3 \times 3$. Pero, si se desea suavizar más una imagen, se puede aumentar el tamaño. En este caso, el filtro promedio de tamaño $k \times k$ se define como:
+
+   ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/MayorTamannioMatrizPromedio.png)
+
+   y, en este caso, calcula el promedio de los $k^2$ pixeles que están al rededor del pixel de referencia.
+
+2. Filtro Gaussiano: Este filtro se genera utilizando una discretización de la distribución gaussiana. Se define de la siguiente manera:
+   
+    ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/FiltroGaussianoMatrices.png)
+
+    y tiene la misma finalidad que el filtro del promedio.
+
+    ![](https://github.com/Ignaciograne/PAID/blob/main/Imgs/OriginalVsFiltroPromedioVsFiltroGaussiano.png) 
+
+
 
 <br></br>
 
