@@ -1451,12 +1451,6 @@ Sea $A \in \mathbb{R}^{m \times n}$ una imagen a escala de grises.
 
 
 ## Clase 12
-TODO
-
-<br></br>
-
-
-
 ## Clase 13
 ## Clase 14
 ## Clase 15
@@ -1468,6 +1462,15 @@ No se impartió porque al profesor le surgió una reunión.
 ## Clase 17
 ## Clase 18
 ## Clase 19
+Vamos a estudiar el **efecto croma** en una imagen.
+
+
+
+
+<br></br>
+
+
+
 ## Clase 20
 ## Clase 21
 ## Clase 22
