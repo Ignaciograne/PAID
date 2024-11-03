@@ -1,71 +1,84 @@
-clc; clear;
+close all; clc; clear;
+pkg load image;  % Cargar el paquete de procesamiento de imágenes, asegúrate de tenerlo instalado
 
-% Cargar y preparar los datos de entrenamiento
-function [U, mean_face, known_faces] = prepare_training_data()
-    num_subjects = 40;
-    images_per_subject = 9;
-    known_faces = cell(num_subjects * images_per_subject, 1);
-    index = 1;
+num_subjects = 40;  % Número de sujetos
+images_per_subject = 9;  % Número de imágenes por sujeto
+image_size = [112, 92];  % Tamaño común de cada imagen (112x92 píxeles)
 
-    % Leer todas las imágenes de cada sujeto
-    for s = 1:num_subjects
-        for img = 1:images_per_subject
-            image_path = sprintf('training/s%02d/%d.jpg', s, img);
-            img_matrix = imread(image_path);
-            known_faces{index}.image = img_matrix;
-            known_faces{index}.identity = sprintf('Subject%02d', s);
-            index = index + 1;
+% Pre-allocating the matrix to hold all vectorized images
+face_images = zeros(prod(image_size), num_subjects * images_per_subject);
+
+index = 1;
+for i = 1:num_subjects
+    for j = 1:images_per_subject
+        filename = sprintf('training/s%02d/%d.jpg', i, j);
+        img = imread(filename);
+
+        % Convertir a escala de grises si es necesario
+        if size(img, 3) == 3
+            img = rgb2gray(img);
         end
-    end
 
-    % Calcular la imagen media
-    mean_face = zeros(size(known_faces{1}.image));
-    for i = 1:length(known_faces)
-        mean_face = mean_face + double(known_faces{i}.image);
-    end
-    mean_face = mean_face / length(known_faces);
+        % Redimensionar la imagen si es necesario
+        img = imresize(img, image_size);
 
-    % Preparar una gran matriz con todas las imágenes para SVD
-    all_faces = [];
-    for i = 1:length(known_faces)
-        all_faces = [all_faces, double(known_faces{i}.image(:))];
-    end
+        % Convertir la imagen a un vector columna
+        img_vector = img(:);
 
-    % Restar la imagen media
-    all_faces = all_faces - mean_face(:);
-
-    % Calcular SVD
-    [U, S, V] = svd(all_faces, 'econ');
-end
-
-% Reconocer un rostro utilizando la información preparada
-function identity = recognize_face(f, U, mean_face, known_faces, epsilon)
-    a = double(f) - mean_face;  % Normalizar la imagen de entrada
-    x = U' * a;  % Proyectar la imagen normalizada en el espacio de rostros
-
-    min_distance = inf;
-    identity = 'unknown';
-
-    % Comparar con cada rostro conocido
-    for i = 1:length(known_faces)
-        known_face_vector = double(known_faces{i}.image) - mean_face;
-        xi = U' * known_face_vector;
-        distance = norm(x - xi);
-        if distance < min_distance
-            min_distance = distance;
-            identity = known_faces{i}.identity;
-        end
-    end
-
-    if min_distance > epsilon
-        identity = 'unknown';
+        % Añadir el vector columna a la matriz face_images
+        face_images(:, index) = img_vector;
+        index = index + 1;
     end
 end
 
-% Ejemplo de uso del sistema de reconocimiento facial
-[U, mean_face, known_faces] = prepare_training_data();
-new_face = imread('compare/p10.jpg');
-epsilon = 100;  % Definir un umbral apropiado
-identity = recognize_face(new_face, U, mean_face, known_faces, epsilon);
-fprintf('La identidad reconocida es: %s\n');
+% Paso 1: Calcular la imagen media
+mean_face = mean(face_images, 2);
 
+% Paso 2: Sustraer la imagen media de todas las imágenes de entrenamiento
+A = face_images - mean_face;
+
+% Paso 3: Calcular SVD
+[U, S, V] = svd(A, 'econ');  % 'econ' para economizar en el uso de memoria si M es mucho mayor que N
+
+for i = 1:num_subjects
+  filename = sprintf('compare/p%02d.jpg', i);
+  new_image = double(imread(filename));
+
+  % Paso 4: Proyectar una nueva imagen f en el espacio de caras
+  f = new_image(:);  % Convertir la nueva imagen en un vector columna si aún no lo es
+  f_normalized = f - mean_face;
+  x = U' * f_normalized;  % Coordenadas de f en el espacio de caras
+
+  % Paso 5: Clasificar la nueva imagen comparando la distancia con las proyecciones de las imágenes de entrenamiento
+  projections = U' * A;  % Proyecciones de las imágenes de entrenamiento
+  differences = bsxfun(@minus, projections, x);
+  distances = sqrt(sum(differences.^2, 1));
+  [min_distance, index] = min(distances);
+
+  threshold = 1e4;
+
+  % Cargar y mostrar imágenes
+  figure;  % Crea una nueva ventana de figura
+  subplot(1, 2, 1);
+  imshow(new_image, []);
+  title(['Imagen ' num2str(i)]);
+
+  if min_distance < threshold
+      % Calcular la posición del individuo reconocido en la matriz original
+      subject_index = ceil(index / images_per_subject);
+      image_index = mod(index, images_per_subject);
+      if image_index == 0
+          image_index = images_per_subject;
+      end
+      recognized_image_filename = sprintf('training/s%02d/%d.jpg', subject_index, image_index);
+      recognized_image = imread(recognized_image_filename);
+
+      subplot(1, 2, 2);  % Selecciona la segunda subfigura
+      imshow(recognized_image);
+      title(sprintf('Reconocido como Sujeto %02d, Imagen %d', subject_index, image_index));
+  else
+      subplot(1, 2, 2);  % Selecciona la segunda subfigura
+      imshow(zeros(size(new_image)));  % Muestra una imagen en negro si no se reconoce
+      title('No Reconocido');
+  end
+endfor
