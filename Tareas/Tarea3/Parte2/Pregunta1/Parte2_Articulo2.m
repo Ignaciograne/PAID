@@ -5,13 +5,11 @@ I = double(imread('imagen.jpg'));
 
 % Leer y preparar la imagen de marca de agua
 watermark = double(imread('marca.jpg'));
-watermark = imresize(watermark, [32 32]);  % Asegurar el tamaño adecuado
-watermark = watermark / 255;  % Normalizar
 
 % Parámetro de ganancia
 alpha = 0.05;
 
-function watermarked_image = apply_water_mark(Image, Watermark, alpha)
+function [U, S, V, watermarked_image] = apply_water_mark(Image, Watermark, alpha)
     % Dividir en bloques de 8x8 y aplicar DCT
     DCT_blocks = blockproc(Image, [8 8], @(block) dct2(block));
 
@@ -44,13 +42,31 @@ function watermarked_image = apply_water_mark(Image, Watermark, alpha)
 end
 
 
+function watermark_extracted = remove_water_mark(Image, watermarked_image, alpha)
+    % Inicializar la matriz de DCT extraída
+    DCT_blocks_extracted = zeros(size(watermarked_image)) / alpha;
+
+    block_size = 8;
+
+    % Inicializar la marca de agua extraída
+    watermark_extracted = zeros(size(Image)/block_size);
+
+    % Procesar cada bloque de 8x8
+
+    for i = 1:block_size:size(watermarked_image,1)
+        for j = 1:block_size:size(watermarked_image,2)
+            block = watermarked_image(i:i+block_size-1, j:j+block_size-1);
+            DCT_block = dct2(block);
+
+            % Recuperar la marca de agua del coeficiente DC
+            watermark_extracted(ceil(i/block_size), ceil(j/block_size)) = (DCT_block(1,1) - dct2(Image(i:i+block_size-1, j:j+block_size-1))(1,1)) / alpha;
+        end
+    end
+end
 
 
-
-watermarked_image = apply_water_mark(I, watermark, alpha);
-
-
-
+[U, S, V, watermarked_image] = apply_water_mark(I, watermark, alpha);
+watermark_extracted = remove_water_mark(I, watermarked_image, alpha);
 
 
 
@@ -61,14 +77,14 @@ imshow(uint8(I))
 title('Imagen original')
 
 subplot(2,2,2)
-imshow(uint8(watermark) * 255)
+imshow(uint8(watermark))
 title('Marca de agua')
 
 subplot(2,2,3)
 imshow(uint8(watermarked_image))
 title('Imagen con marca de agua')
 
-%subplot(2,2,4)
-%imshow(uint8(watermark_extracted));
-%title('Marca de Agua Extraída');
+subplot(2,2,4)
+imshow(uint8(watermark_extracted));
+title('Marca de Agua Extraída');
 
